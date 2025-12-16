@@ -1,0 +1,43 @@
+#!/bin/bash
+# Auto Installer VoltxControlCenter
+# Created for VoltXRinn
+
+echo "[⚡] Memulai instalasi VoltxControlCenter..."
+echo "[!] Pastikan koneksi internet stabil!"
+
+# Update system
+pkg update -y && pkg upgrade -y
+
+# Install dependencies
+pkg install -y python python-pip git curl wget nano
+
+# Install python modules
+pip install --upgrade pip
+pip install requests colorama aiohttp cryptography psutil fake-useragent pycryptodome
+
+# Clone project
+git clone https://github.com/QirinnFall/VoltxControlCenter
+cd VoltxControlCenter
+
+# Set permissions
+chmod +x menu.py
+chmod +x modules/*.py
+
+# Create necessary directories
+mkdir -p data/logs
+mkdir -p config
+
+# Generate default config
+echo '{
+  "api_key": "voltx_rinn_2024",
+  "max_threads": 50,
+  "ban_timeout": 300,
+  "unban_retry": 10,
+  "debug_mode": false
+}' > config/settings.cfg
+
+echo '[]' > config/targets.json
+
+echo "[✅] Instalasi selesai!"
+echo "[🚀] Jalankan dengan: cd VoltxControlCenter && python menu.py"
+echo "[⚡] Owner: VoltXRinn | Github: QirinnFall"
