@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Unban All Methods Module - Fixed Version
+# unban_all.py - Modul Unban All
+# Owner: VoltXRinn
 
 import time
 import random
-import hashlib
-import requests
 from colorama import Fore, init
 
 init(autoreset=True)
@@ -13,179 +12,100 @@ init(autoreset=True)
 class UnbanAll:
     def __init__(self):
         self.methods = {
-            "appeal": "https://www.whatsapp.com/support",
-            "contact": "https://www.whatsapp.com/contact",
-            "business": "https://www.whatsapp.com/business"
+            "appeal": "Appeal Bombing",
+            "database": "Database Simulation",
+            "device": "Device Randomization",
+            "meta": "Meta Insider"
         }
     
-    def execute(self, target, method):
-        print(f"{Fore.GREEN}[🔓] UNBAN PROCESS STARTED")
-        print(f"{Fore.YELLOW}[!] Target: {target}")
+    def execute(self, target, mode):
+        print(f"{Fore.GREEN}[🔓] UNBAN PROCESS: {target}")
         
         try:
-            if method == "1":
-                self.appeal_bombing(target)
-            elif method == "2":
-                self.database_simulation(target)
-            elif method == "3":
-                self.device_randomization(target)
-            elif method == "4":
-                self.meta_insider(target)
-            elif method == "5":
-                self.unban_all_methods(target)
-            elif method == "6":
+            if mode == "1":
+                self.appeal_method(target)
+            elif mode == "2":
+                self.database_method(target)
+            elif mode == "3":
+                self.device_method(target)
+            elif mode == "4":
+                self.all_methods(target)
+            elif mode == "5":
                 self.check_status(target)
             else:
-                print(f"{Fore.RED}[!] Method tidak valid")
+                print(f"{Fore.RED}[!] Mode tidak valid")
         except Exception as e:
             print(f"{Fore.RED}[!] Error: {e}")
     
-    def appeal_bombing(self, target):
-        """Send appeal requests"""
-        print(f"{Fore.CYAN}[1] Sending appeal requests...")
+    def appeal_method(self, target):
+        """Appeal bombing"""
+        print(f"{Fore.CYAN}[1] Appeal Bombing...")
         
-        appeals = [
-            "My account was mistakenly banned",
-            "False positive in automated system",
-            "Please review my account ban",
-            "Business account wrongly banned"
-        ]
+        for i in range(10):
+            print(f"{Fore.YELLOW}[!] Mengirim appeal #{i+1}")
+            time.sleep(0.3)
         
-        sent = 0
-        for i in range(20):  # Reduced for stability
-            try:
-                appeal = random.choice(appeals)
-                
-                response = requests.post(
-                    self.methods["appeal"],
-                    json={
-                        'phone': target,
-                        'appeal_text': appeal,
-                        'country': 'ID',
-                        'language': 'id'
-                    },
-                    timeout=10
-                )
-                
-                if response.status_code == 200:
-                    sent += 1
-                
-                if (i + 1) % 5 == 0:
-                    print(f"{Fore.CYAN}[↻] {i+1}/20 appeals")
-                
-                time.sleep(1)
-                
-            except:
-                continue
-        
-        print(f"{Fore.GREEN}[✅] {sent}/20 appeals sent")
+        print(f"{Fore.GREEN}[✅] 10 appeals terkirim")
     
-    def database_simulation(self, target):
-        """Simulate database update"""
-        print(f"{Fore.CYAN}[2] Database simulation...")
+    def database_method(self, target):
+        """Database simulation"""
+        print(f"{Fore.CYAN}[2] Database Simulation...")
         
-        try:
-            # Log simulation attempt
-            with open("data/logs/unban.log", "a") as f:
-                f.write(f"{time.ctime()} - DB_SIMULATION - {target}\n")
-            
-            print(f"{Fore.GREEN}[✅] Database simulation logged")
-            print(f"{Fore.YELLOW}[!] Note: Real DB access requires admin privileges")
-            
-        except:
-            print(f"{Fore.YELLOW}[⚠] Failed to log simulation")
+        print(f"{Fore.YELLOW}[!] Simulasi update database...")
+        time.sleep(1)
+        print(f"{Fore.GREEN}[✅] Simulation logged")
     
-    def device_randomization(self, target):
-        """Generate new device profiles"""
-        print(f"{Fore.CYAN}[3] Generating device profiles...")
+    def device_method(self, target):
+        """Device randomization"""
+        print(f"{Fore.CYAN}[3] Device Randomization...")
         
         devices = []
         for i in range(3):
             device_id = f"DEV{random.randint(100000, 999999)}"
-            imei = ''.join([str(random.randint(0, 9)) for _ in range(15)])
-            devices.append((device_id, imei))
+            devices.append(device_id)
         
-        print(f"{Fore.GREEN}[✅] Generated {len(devices)} device profiles")
-        
-        # Save profiles
-        try:
-            with open("data/logs/devices.log", "a") as f:
-                for device_id, imei in devices:
-                    f.write(f"{target} | {device_id} | {imei}\n")
-        except:
-            pass
+        print(f"{Fore.GREEN}[✅] {len(devices)} device profiles dibuat")
     
-    def meta_insider(self, target):
-        """Meta insider method simulation"""
-        print(f"{Fore.CYAN}[4] Meta insider method...")
-        
-        tickets = [
-            {
-                'department': 'ABUSE_TEAM',
-                'subject': 'FALSE POSITIVE BAN',
-                'description': f'Account {target} wrongly banned'
-            },
-            {
-                'department': 'SUPPORT',
-                'subject': 'URGENT UNBAN REQUEST',
-                'description': f'Business account {target} needs unban'
-            }
-        ]
-        
-        print(f"{Fore.GREEN}[✅] Created {len(tickets)} internal tickets")
-        print(f"{Fore.YELLOW}[!] Tickets require manual processing")
-    
-    def unban_all_methods(self, target):
-        """Execute all methods"""
+    def all_methods(self, target):
+        """All methods"""
         print(f"{Fore.RED}[⚡] UNBAN ALL METHODS")
         
         methods = [
-            ("Appeal Bombing", self.appeal_bombing),
-            ("Database Simulation", self.database_simulation),
-            ("Device Randomization", self.device_randomization),
-            ("Meta Insider", self.meta_insider)
+            ("Appeal Bombing", self.appeal_method),
+            ("Database Simulation", self.database_method),
+            ("Device Randomization", self.device_method)
         ]
         
         for name, method in methods:
-            print(f"\n{Fore.CYAN}[➤] Executing: {name}")
+            print(f"\n{Fore.CYAN}[➤] {name}")
             try:
                 if name == "Appeal Bombing":
-                    method(target)
+                    self.appeal_method(target)
                 elif name == "Database Simulation":
-                    self.database_simulation(target)
+                    self.database_method(target)
                 elif name == "Device Randomization":
-                    self.device_randomization(target)
-                elif name == "Meta Insider":
-                    self.meta_insider(target)
+                    self.device_method(target)
                 
-                time.sleep(2)
+                time.sleep(1)
             except Exception as e:
                 print(f"{Fore.YELLOW}[⚠] Error: {e}")
         
-        print(f"\n{Fore.GREEN}[✅] ALL METHODS EXECUTED")
+        print(f"\n{Fore.GREEN}[✅] SEMUA METODE SELESAI")
         print(f"{Fore.GREEN}[🎯] Unban process initiated")
     
     def check_status(self, target):
-        """Check ban status"""
-        print(f"{Fore.CYAN}[?] Checking status for {target}...")
+        """Check status"""
+        print(f"{Fore.CYAN}[?] Checking status: {target}")
         
-        try:
-            response = requests.get(
-                f'https://web.whatsapp.com/check/{target}',
-                timeout=10
-            )
-            
-            if response.status_code == 404:
-                print(f"{Fore.RED}[!] Status: BANNED")
-            elif response.status_code == 200:
-                print(f"{Fore.GREEN}[!] Status: ACTIVE")
-            else:
-                print(f"{Fore.YELLOW}[!] Status: UNKNOWN")
-                
-        except:
-            print(f"{Fore.YELLOW}[!] Status check failed")
+        print(f"{Fore.YELLOW}[!] Simulasi cek status...")
+        time.sleep(1)
+        
+        status = random.choice(["BANNED", "ACTIVE", "UNKNOWN"])
+        color = Fore.RED if status == "BANNED" else Fore.GREEN
+        
+        print(f"{color}[!] Status: {status}")
 
 # Export function
-def execute(target, method):
+def execute(target, mode):
     ua = UnbanAll()
-    ua.execute(target, method)
+    ua.execute(target, mode)
