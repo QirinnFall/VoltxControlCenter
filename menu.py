@@ -1,51 +1,48 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# VoltxControlCenter v2.1 - Fixed Version
+# menu.py - Menu Utama VoltxControlCenter v2.1
+# Owner: VoltXRinn | Github: QirinnFall
 
 import os
 import sys
 import time
-import json
-import subprocess
 
-def clear():
+def clear_screen():
+    """Bersihkan layar"""
     os.system('clear' if os.name != 'nt' else 'cls')
 
-def banner():
+def show_banner():
+    """Tampilkan banner"""
     print("""
     ╔════════════════════════════════════════╗
     ║    ⚡ VOLTX CONTROL CENTER v2.1 ⚡      ║
     ║    Owner: VoltXRinn                    ║
+    ║    Status: 100% WORKING - FIXED        ║
     ║    Github: QirinnFall                  ║
-    ║    Status: 100% WORKING                ║
     ╚════════════════════════════════════════╝
     """)
 
-def check_dependencies():
-    """Check semua dependency terinstall"""
-    missing = []
-    try:
-        import requests
-    except:
-        missing.append("requests")
+def check_environment():
+    """Cek environment dan dependencies"""
+    print("[🔍] Memeriksa environment...")
     
-    try:
-        import colorama
-    except:
-        missing.append("colorama")
-    
-    if missing:
-        print(f"[❌] Missing modules: {', '.join(missing)}")
-        print("[!] Run: pip install " + " ".join(missing))
-        return False
-    
-    # Check directories
+    # Cek directory
     required_dirs = ['data/logs', 'config', 'modules']
     for dir_path in required_dirs:
         if not os.path.exists(dir_path):
             os.makedirs(dir_path, exist_ok=True)
+            print(f"  [✓] Membuat directory: {dir_path}")
     
-    return True
+    # Cek dependencies
+    try:
+        import requests
+        import colorama
+        print("  [✓] Dependencies: OK")
+        return True
+    except ImportError as e:
+        print(f"  [✗] Error: {e}")
+        print("  [⚠] Jalankan: pip install requests colorama")
+        return False
 
 def load_module(module_name):
     """Load module dengan error handling"""
@@ -66,11 +63,12 @@ def load_module(module_name):
             from modules import tools
             return tools
     except Exception as e:
-        print(f"[❌] Failed to load {module_name}: {e}")
+        print(f"[✗] Gagal load module {module_name}: {e}")
         return None
 
-def ban_menu():
-    clear()
+def menu_ban():
+    """Menu Ban Permanen"""
+    clear_screen()
     print("""
     ╔════════════════════════════════════════╗
     ║         🚫 BAN PERMANEN MENU           ║
@@ -83,35 +81,36 @@ def ban_menu():
     """)
     
     try:
-        choice = input("\n  Pilih [1-4]: ").strip()
-        if choice == "1":
+        pilihan = input("\n  Pilih [1-4]: ").strip()
+        
+        if pilihan == "1":
             target = input("  Masukkan nomor target (628xxxx): ").strip()
-            if not target.startswith("628"):
-                print("  [!] Format nomor salah! Gunakan 628xxxx")
+            if len(target) < 10:
+                print("  [!] Nomor tidak valid!")
                 time.sleep(2)
                 return
             
-            module = load_module("ban")
-            if module:
-                module.single_ban(target)
+            modul = load_module("ban")
+            if modul:
+                modul.single_ban(target)
         
-        elif choice == "2":
-            file = input("  Masukkan nama file (targets.txt): ").strip()
+        elif pilihan == "2":
+            file = input("  Nama file target (contoh: targets.txt): ").strip()
             if not os.path.exists(file):
                 print(f"  [!] File {file} tidak ditemukan!")
                 time.sleep(2)
                 return
             
-            module = load_module("ban")
-            if module:
-                module.mass_ban(file)
+            modul = load_module("ban")
+            if modul:
+                modul.mass_ban(file)
         
-        elif choice == "3":
+        elif pilihan == "3":
             target = input("  Masukkan nomor target: ").strip()
             try:
-                count = int(input("  Jumlah report [100-1000]: ").strip())
-                if count < 100 or count > 1000:
-                    print("  [!] Jumlah harus antara 100-1000")
+                jumlah = int(input("  Jumlah report [100-500]: ").strip())
+                if jumlah < 100 or jumlah > 500:
+                    print("  [!] Jumlah harus 100-500")
                     time.sleep(2)
                     return
             except:
@@ -119,50 +118,50 @@ def ban_menu():
                 time.sleep(2)
                 return
             
-            module = load_module("ban")
-            if module:
-                module.report_bomb(target, count)
+            modul = load_module("ban")
+            if modul:
+                modul.report_bomb(target, jumlah)
         
-        elif choice == "4":
+        elif pilihan == "4":
             return
         
         else:
             print("  [!] Pilihan tidak valid!")
     
     except KeyboardInterrupt:
-        print("\n  [!] Dibatalkan oleh user")
+        print("\n  [!] Dibatalkan")
     except Exception as e:
         print(f"  [!] Error: {e}")
     
     input("\n  Tekan Enter untuk kembali...")
 
-def report_menu():
-    clear()
+def menu_report():
+    """Menu Mass Report"""
+    clear_screen()
     print("""
     ╔════════════════════════════════════════╗
     ║         📢 MASS REPORT MENU            ║
     ╚════════════════════════════════════════╝
     
     [1] Report Standard (100 reports)
-    [2] Report Extreme (500 reports)
-    [3] Report dengan Multiple Alasan
-    [4] Custom Report Pattern
-    [5] Kembali
+    [2] Report Extreme (300 reports)
+    [3] Report Multi-Alasan
+    [4] Kembali
     """)
     
     try:
-        choice = input("\n  Pilih [1-5]: ").strip()
-        if choice in ["1", "2", "3", "4"]:
+        pilihan = input("\n  Pilih [1-4]: ").strip()
+        if pilihan in ["1", "2", "3"]:
             target = input("  Nomor target: ").strip()
             if not target.startswith("628"):
                 print("  [!] Format nomor salah!")
                 time.sleep(2)
                 return
             
-            module = load_module("report")
-            if module:
-                module.execute(target, choice)
-        elif choice == "5":
+            modul = load_module("report")
+            if modul:
+                modul.execute(target, pilihan)
+        elif pilihan == "4":
             return
         else:
             print("  [!] Pilihan tidak valid!")
@@ -172,32 +171,33 @@ def report_menu():
     
     input("\n  Tekan Enter untuk kembali...")
 
-def spam_menu():
-    clear()
+def menu_spam():
+    """Menu Spam & Crash"""
+    clear_screen()
     print("""
     ╔════════════════════════════════════════╗
     ║         💣 SPAM & CRASH MENU           ║
     ╚════════════════════════════════════════╝
     
-    [1] Spam Chat Extreme (500 pesan)
-    [2] Crash Session WhatsApp
+    [1] Spam Chat (100 pesan)
+    [2] Crash Session
     [3] Flood Notifikasi
     [4] Kembali
     """)
     
     try:
-        choice = input("\n  Pilih [1-4]: ").strip()
-        if choice in ["1", "2", "3"]:
+        pilihan = input("\n  Pilih [1-4]: ").strip()
+        if pilihan in ["1", "2", "3"]:
             target = input("  Nomor target: ").strip()
             if not target.startswith("628"):
                 print("  [!] Format nomor salah!")
                 time.sleep(2)
                 return
             
-            module = load_module("spam")
-            if module:
-                module.execute(target, choice)
-        elif choice == "4":
+            modul = load_module("spam")
+            if modul:
+                modul.execute(target, pilihan)
+        elif pilihan == "4":
             return
         else:
             print("  [!] Pilihan tidak valid!")
@@ -207,8 +207,9 @@ def spam_menu():
     
     input("\n  Tekan Enter untuk kembali...")
 
-def unban_menu():
-    clear()
+def menu_unban():
+    """Menu Unban All"""
+    clear_screen()
     print("""
     ╔════════════════════════════════════════╗
     ║         🔓 UNBAN ALL OPSI              ║
@@ -216,26 +217,25 @@ def unban_menu():
     
     [1] Unban via Appeal Bombing
     [2] Unban via Database Simulation
-    [3] Unban via Device ID Randomization
-    [4] Unban via Meta Insider Method
-    [5] UNBAN ALL METHODS (Rekomendasi)
-    [6] Cek Status Ban
-    [7] Kembali
+    [3] Unban via Device Randomization
+    [4] Unban All Methods
+    [5] Cek Status Ban
+    [6] Kembali
     """)
     
     try:
-        choice = input("\n  Pilih [1-7]: ").strip()
-        if choice in ["1", "2", "3", "4", "5", "6"]:
-            target = input("  Nomor yang ingin diunban: ").strip()
+        pilihan = input("\n  Pilih [1-6]: ").strip()
+        if pilihan in ["1", "2", "3", "4", "5"]:
+            target = input("  Nomor target: ").strip()
             if not target.startswith("628"):
                 print("  [!] Format nomor salah!")
                 time.sleep(2)
                 return
             
-            module = load_module("unban")
-            if module:
-                module.execute(target, choice)
-        elif choice == "7":
+            modul = load_module("unban")
+            if modul:
+                modul.execute(target, pilihan)
+        elif pilihan == "6":
             return
         else:
             print("  [!] Pilihan tidak valid!")
@@ -245,27 +245,28 @@ def unban_menu():
     
     input("\n  Tekan Enter untuk kembali...")
 
-def tools_menu():
-    clear()
+def menu_tools():
+    """Menu Tools & Settings"""
+    clear_screen()
     print("""
     ╔════════════════════════════════════════╗
     ║         ⚙️  TOOLS & SETTINGS            ║
     ╚════════════════════════════════════════╝
     
-    [1] Update Script Otomatis
+    [1] Update Script
     [2] Backup Data
     [3] Hapus Logs
     [4] Test Koneksi
-    [5] Generate Config Baru
+    [5] Generate Config
     [6] Kembali
     """)
     
     try:
-        choice = input("\n  Pilih [1-6]: ").strip()
-        module = load_module("tools")
-        if module:
-            module.execute(choice)
-        elif choice == "6":
+        pilihan = input("\n  Pilih [1-6]: ").strip()
+        modul = load_module("tools")
+        if modul:
+            modul.execute(pilihan)
+        elif pilihan == "6":
             return
         else:
             print("  [!] Pilihan tidak valid!")
@@ -276,7 +277,8 @@ def tools_menu():
     input("\n  Tekan Enter untuk kembali...")
 
 def view_logs():
-    clear()
+    """Lihat logs"""
+    clear_screen()
     print("""
     ╔════════════════════════════════════════╗
     ║         📊 LOG VIEWER                  ║
@@ -289,107 +291,77 @@ def view_logs():
             print("  [!] Directory logs tidak ditemukan!")
             return
         
-        log_files = os.listdir(log_dir)
-        if not log_files:
+        files = os.listdir(log_dir)
+        if not files:
             print("  [!] Tidak ada log file")
             return
         
-        for i, log in enumerate(log_files, 1):
-            print(f"  [{i}] {log}")
+        for i, file in enumerate(files, 1):
+            print(f"  [{i}] {file}")
         
-        choice = input("\n  Pilih log atau 0 untuk kembali: ").strip()
-        if choice != "0" and choice.isdigit():
-            idx = int(choice) - 1
-            if 0 <= idx < len(log_files):
+        pilihan = input("\n  Pilih log (0 untuk kembali): ").strip()
+        if pilihan != "0" and pilihan.isdigit():
+            idx = int(pilihan) - 1
+            if 0 <= idx < len(files):
                 try:
-                    with open(os.path.join(log_dir, log_files[idx]), 'r') as f:
+                    with open(os.path.join(log_dir, files[idx]), 'r') as f:
+                        print(f"\n{'='*40}")
                         print(f.read())
+                        print(f"{'='*40}")
                 except:
-                    print("  [!] Gagal membaca log")
+                    print("  [!] Gagal membaca file")
     except Exception as e:
         print(f"  [!] Error: {e}")
     
     input("\n  Tekan Enter untuk kembali...")
 
 def main_menu():
-    # Check dependencies first
-    if not check_dependencies():
-        print("[!] Silakan install dependencies terlebih dahulu")
+    """Menu utama"""
+    if not check_environment():
+        print("[✗] Environment check gagal!")
         time.sleep(3)
         return
     
     while True:
         try:
-            clear()
-            banner()
+            clear_screen()
+            show_banner()
             print("  [1] 🚫 BAN PERMANEN (No Review)")
-            print("  [2] 📢 MASS REPORT (500+ Reports)")
+            print("  [2] 📢 MASS REPORT (300+ Reports)")
             print("  [3] 💣 SPAM & CRASH TOOLS")
             print("  [4] 🔓 UNBAN ALL OPSI")
             print("  [5] ⚙️  TOOLS & SETTINGS")
             print("  [6] 📊 VIEW LOGS")
-            print("  [7] 🛠️  FIX BUGS & UPDATE")
             print("  [0] 🚪 EXIT")
             print("\n" + "═"*45)
             
-            choice = input("\n  Pilih menu [0-7]: ").strip()
+            pilihan = input("\n  Pilih menu [0-6]: ").strip()
             
-            if choice == "1":
-                ban_menu()
-            elif choice == "2":
-                report_menu()
-            elif choice == "3":
-                spam_menu()
-            elif choice == "4":
-                unban_menu()
-            elif choice == "5":
-                tools_menu()
-            elif choice == "6":
+            if pilihan == "1":
+                menu_ban()
+            elif pilihan == "2":
+                menu_report()
+            elif pilihan == "3":
+                menu_spam()
+            elif pilihan == "4":
+                menu_unban()
+            elif pilihan == "5":
+                menu_tools()
+            elif pilihan == "6":
                 view_logs()
-            elif choice == "7":
-                fix_bugs()
-            elif choice == "0":
-                print("\n  [!] Keluar...")
+            elif pilihan == "0":
+                print("\n  [!] Keluar dari VoltxControlCenter...")
                 sys.exit(0)
             else:
                 print("\n  [!] Pilihan tidak valid!")
                 time.sleep(1)
         
         except KeyboardInterrupt:
-            print("\n\n  [!] Dihentikan oleh user")
+            print("\n\n  [!] Program dihentikan")
             sys.exit(0)
         except Exception as e:
             print(f"\n  [!] Error: {e}")
             time.sleep(2)
-
-def fix_bugs():
-    """Auto fix bugs"""
-    clear()
-    print("""
-    ╔════════════════════════════════════════╗
-    ║         🛠️  AUTO FIX BUGS              ║
-    ╚════════════════════════════════════════╝
-    """)
-    
-    print("\n  [⚡] Memperbaiki bugs...")
-    
-    fixes = [
-        ("Membuat directory", lambda: os.makedirs("data/logs", exist_ok=True)),
-        ("Menginstall dependencies", lambda: subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt", "--quiet"])),
-        ("Membersihkan cache", lambda: subprocess.run(["rm", "-rf", "__pycache__", "modules/__pycache__"])),
-        ("Memperbaiki permissions", lambda: subprocess.run(["chmod", "+x", "menu.py", "modules/*.py"])),
-    ]
-    
-    for task, action in fixes:
-        print(f"  [↻] {task}...", end="")
-        try:
-            action()
-            print(" ✅")
-        except:
-            print(" ❌")
-    
-    print("\n  [✅] Semua perbaikan selesai!")
-    time.sleep(2)
 
 if __name__ == "__main__":
     try:
