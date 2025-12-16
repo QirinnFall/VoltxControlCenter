@@ -1,0 +1,7 @@
+requests==2.31.0
+colorama==0.4.6
+aiohttp==3.9.1
+cryptography==42.0.5
+psutil==5.9.8
+fake-useragent==1.4.0
+pycryptodome==3.20.0
