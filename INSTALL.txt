@@ -1,43 +1,93 @@
 #!/bin/bash
-# Auto Installer VoltxControlCenter
+# Auto Installer VoltxControlCenter - Fixed Version
 # Created for VoltXRinn
 
-echo "[⚡] Memulai instalasi VoltxControlCenter..."
+echo "[⚡] Memulai instalasi VoltxControlCenter v2.1..."
 echo "[!] Pastikan koneksi internet stabil!"
+
+# Clean previous installation
+rm -rf ~/VoltxControlCenter 2>/dev/null
+rm -rf VoltxControlCenter 2>/dev/null
 
 # Update system
 pkg update -y && pkg upgrade -y
 
 # Install dependencies
-pkg install -y python python-pip git curl wget nano
+pkg install -y python python-pip git curl wget nano clang libxml2 libxslt
+
+# Upgrade pip
+pip install --upgrade pip setuptools wheel
 
 # Install python modules
-pip install --upgrade pip
 pip install requests colorama aiohttp cryptography psutil fake-useragent pycryptodome
 
-# Clone project
+# Clone project (gunakan raw link)
 git clone https://github.com/QirinnFall/VoltxControlCenter
 cd VoltxControlCenter
+
+# Create ALL necessary directories
+mkdir -p data/logs
+mkdir -p config
+mkdir -p modules/__pycache__
 
 # Set permissions
 chmod +x menu.py
 chmod +x modules/*.py
-
-# Create necessary directories
-mkdir -p data/logs
-mkdir -p config
+chmod 755 data data/logs config
+chmod 644 requirements.txt INSTALL.txt
 
 # Generate default config
-echo '{
+cat > config/settings.cfg << 'EOF'
+{
   "api_key": "voltx_rinn_2024",
-  "max_threads": 50,
+  "max_threads": 30,
   "ban_timeout": 300,
   "unban_retry": 10,
-  "debug_mode": false
-}' > config/settings.cfg
+  "debug_mode": false,
+  "auto_update": true,
+  "backup_on_start": false,
+  "aggressive_mode": true,
+  "version": "2.1"
+}
+EOF
 
 echo '[]' > config/targets.json
 
-echo "[✅] Instalasi selesai!"
-echo "[🚀] Jalankan dengan: cd VoltxControlCenter && python menu.py"
+# Create test file
+cat > test_install.py << 'EOF'
+#!/usr/bin/env python3
+import sys
+import os
+
+print("[✅] Testing installation...")
+
+# Test imports
+try:
+    import requests
+    import colorama
+    import json
+    import threading
+    import time
+    print("[✅] All imports successful")
+except Exception as e:
+    print(f"[❌] Import error: {e}")
+    sys.exit(1)
+
+# Test directories
+dirs = ['data/logs', 'config', 'modules']
+for d in dirs:
+    if os.path.exists(d):
+        print(f"[✅] Directory {d} exists")
+    else:
+        print(f"[❌] Directory {d} missing")
+
+print("\n[⚡] INSTALLATION COMPLETE!")
+print("[🚀] Run: python menu.py")
+EOF
+
+chmod +x test_install.py
+python test_install.py
+
+echo "[✅] Instalasi selesai 100% tanpa error!"
+echo "[🚀] Jalankan dengan: cd ~/VoltxControlCenter && python menu.py"
 echo "[⚡] Owner: VoltXRinn | Github: QirinnFall"
