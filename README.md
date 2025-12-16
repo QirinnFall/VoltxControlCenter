@@ -21,21 +21,21 @@ Gunakan dengan bijak dan sesuai hukum yang berlaku.
 - ✅ **No Root/No VPN** - Bekerja di Android 13+ Termux
 - ✅ **Auto Backup & Logs** - Semua aktivitas tercatat
 
-## 📦 **INSTALASI CEPAT**
+# ⚡ VoltxControlCenter v2.1
+**Advanced WhatsApp Management Suite**  
+*Created exclusively for VoltXRinn | Github: QirinnFall*
 
-### **Termux (Android)**
+## 🚀 INSTALASI CEPAT
 ```bash
-# 1. Update sistem
+# Di Termux:
 pkg update && pkg upgrade -y
+pkg install python git -y
+pip install requests colorama
 
-# 2. Install dependencies
-pkg install python git curl wget -y
+# Clone atau buat manual
+mkdir -p ~/VoltxControlCenter
+cd ~/VoltxControlCenter
 
-# 3. Clone repository
-git clone https://github.com/QirinnFall/VoltxControlCenter
-
-# 4. Masuk direktori
-cd VoltxControlCenter
-
-# 5. Jalankan installer
-bash INSTALL.txt
+# Copy semua file script ke sini
+# Kemudian:
+python menu.py
